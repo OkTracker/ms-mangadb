@@ -12,5 +12,8 @@ RUN set -xe \
     && rm -rf /usr/share/php7 \
     && rm -rf /tmp/* \
     && apk del .memcached-deps .phpize-deps
+# LOG PERMS
+COPY ./ /var/www/html
+RUN chown -R www-data:www-data /var/www/html
 # Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
