@@ -21,7 +21,7 @@ class Series extends Model
         return $this->hasMany(Book::class);
     }
 
-    function backup_cover()
+    function cover()
     {
         return $this->morphOne(Media::class, 'item');
     }

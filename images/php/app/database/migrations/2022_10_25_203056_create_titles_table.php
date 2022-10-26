@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string("title");
             $table->string("language_iso_639_1");
+            $table->foreignId("series_id");
             $table->timestamps();
             $table->softDeletes();
         });

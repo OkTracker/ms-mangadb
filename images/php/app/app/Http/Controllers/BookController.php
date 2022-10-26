@@ -42,11 +42,8 @@ class BookController extends Controller
         $book->save();
 
         if($request->file('cover')){
-            $local_storage = Storage::disk('local');
-            $path = $local_storage->put('temp/'.$book->id, $request->file('cover'));
-            dispatch(new S3UploadJob($path, $book->id));
+            $media = MediaController::uploadToS3($request->file('cover'), $book);
         }
-        
         return BookResource::make($book);
     }
 
@@ -100,6 +97,16 @@ class BookController extends Controller
             'isbn_13' => 'string',
             'cover' => 'file'
         ]);
+
+        $book = Book::find($id);
+        $book->fill($request->all());
+        $book->update();
+
+        if ($request->file('cover')) {
+            if ($book->cover) $book->cover->delete();
+            $media = MediaController::uploadToS3($request->file('cover'), $book);
+        }
+        return BookResource::make($book);
     }
 
     /**
@@ -110,6 +117,9 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $book = Book::find($id);
+        if ($book->cover) $book->cover->delete();
+        $book->delete();
+        return $book;
     }
 }

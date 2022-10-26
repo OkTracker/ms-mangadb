@@ -14,6 +14,11 @@ class SeriesResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'titles' => $this->titles,
+            'authors' => $this->authors,
+            'cover' => $this->cover ? $this->cover : "pending"
+        ];
     }
 }
